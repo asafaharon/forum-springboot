@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #f9fafb;
+            --text-color: #2c3e50;
+            --border-radius: 8px;
+            --transition-speed: 0.3s;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 2rem 0;
+        }
+
+        .stats .stat {
+            background: var(--secondary-color);
+            color: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            flex: 1;
+            margin: 0 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats .stat h2 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats .stat p {
+            margin: 0;
+        }
+
+        .buttons-bar {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .buttons-bar a {
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            font-weight: bold;
+            background: var(--primary-color);
+            color: white;
+            transition: background var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .buttons-bar a:hover {
+            background: var(--accent-color);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: auto;
+            padding: 1rem 0;
+            font-size: 0.8rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Admin Dashboard</h1>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="stats">
+        <div class="stat">
+            <h2 th:text="${totalUsers}">0</h2>
+            <p>Total Users</p>
+        </div>
+        <div class="stat">
+            <h2 th:text="${totalTopics}">0</h2>
+            <p>Total Topics</p>
+        </div>
+    </div>
+
+    <div class="admin-panel">
+        <h2>Admin Dashboard</h2>
+        <p>Manage topics and users</p>
+
+        <!-- כפתור להורדת קובץ ה-XML -->
+        <a href="/admin/export-xml" class="btn btn-primary">
+            <i class="fas fa-file-download"></i> Download Topics XML
+        </a>
+    </div>
+
+
+    <!-- Buttons Section -->
+    <div class="buttons-bar">
+        <a th:href="@{/admin/topics}">Manage Topics</a>
+        <a th:href="@{/admin/users}">Manage Users</a>
+        <a th:href="@{/topics}">Go to Main Page</a> <!-- כפתור מעבר לדף הראשי -->
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 MyForum. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

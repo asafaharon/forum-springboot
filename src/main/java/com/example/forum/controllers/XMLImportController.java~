@@ -1,0 +1,60 @@
+package com.example.forum.controllers;
+
+import com.example.forum.entities.Topic;
+import com.example.forum.entities.TopicsWrapper;
+import com.example.forum.repositories.TopicRepository;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import java.io.InputStream;
+import java.util.List;
+
+@Controller
+public class XMLImportController {
+
+    private final TopicRepository topicRepository;
+
+    public XMLImportController(TopicRepository topicRepository) {
+        this.topicRepository = topicRepository;
+    }
+
+    // עמוד HTML עם טופס להעלאת קובץ XML
+    @GetMapping("/import-xml")
+    public String showImportXMLPage() {
+        return "import-xml";
+    }
+
+    @PostMapping("/import-xml")
+    public String importXMLFile(@RequestParam("file") MultipartFile file, Model model) {
+        if (file.isEmpty()) {
+            model.addAttribute("error", "Uploaded file is empty.");
+            return "import-xml";
+        }
+        if (!file.getOriginalFilename().toLowerCase().endsWith(".xml")) {
+            model.addAttribute("error", "File must be an XML file.");
+            return "import-xml";
+        }
+        try (InputStream inputStream = file.getInputStream()) {
+            JAXBContext jaxbContext = JAXBContext.newInstance(TopicsWrapper.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            TopicsWrapper wrapper = (TopicsWrapper) unmarshaller.unmarshal(inputStream);
+            List<Topic> topics = wrapper.getTopics();
+            for (Topic topic : topics) {
+                if (topic.getName() == null || topic.getName().trim().isEmpty()) {
+                    continue; // דילוג על נושאים ללא שם תקין
+                }
+                if (!topicRepository.existsByName(topic.getName())) {
+                    topicRepository.save(topic);
+                }
+            }
+            model.addAttribute("message", "XML imported successfully.");
+        } catch (Exception e) {
+            model.addAttribute("error", "Error importing XML: " + e.getMessage());
+        }
+        return "import-xml";
+    }
+}

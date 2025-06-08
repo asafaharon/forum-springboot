@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Topic</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #f9fafb;
+            --text-color: #2c3e50;
+            --border-radius: 8px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all var(--transition-speed) ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .button-group button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: var(--secondary-color);
+            color: white;
+            transition: background var(--transition-speed);
+        }
+
+        .button-group button:hover {
+            background: #2980b9;
+        }
+
+        .button-group .cancel-button {
+            background: #95a5a6;
+        }
+
+        .button-group .cancel-button:hover {
+            background: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1><i class="fas fa-edit"></i> Edit Topic</h1>
+    </div>
+
+    <form th:action="@{/admin/topics/edit}" th:object="${topic}" method="post">
+        <input type="hidden" th:field="*{id}" />
+        <label for="name">Topic Name:</label>
+        <input type="text" id="name" th:field="*{name}" required />
+
+        <label for="description">Description:</label>
+        <textarea id="description" th:field="*{description}" required></textarea>
+
+        <button type="submit">Save</button>
+    </form>
+
+
+</div>
+
+</body>
+</html>

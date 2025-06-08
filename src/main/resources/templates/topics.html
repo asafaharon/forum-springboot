@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Topics</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --accent-color: #e74c3c;
+      --background-color: #f9fafb;
+      --text-color: #2c3e50;
+      --border-radius: 8px;
+      --transition-speed: 0.3s;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: all var(--transition-speed) ease;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--background-color);
+      color: var(--text-color);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .welcome-text {
+      color: white;
+      font-size: 1.2rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      backdrop-filter: blur(5px);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .topics-list {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .topics-list li {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transform: translateY(0);
+      animation: fadeIn 0.6s ease-out forwards;
+      opacity: 0;
+    }
+
+    .topics-list li:nth-child(odd) {
+      animation-delay: 0.2s;
+    }
+
+    .topics-list li:nth-child(even) {
+      animation-delay: 0.4s;
+    }
+
+    .topics-list li:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .topics-list span {
+      font-weight: 500;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-color);
+    }
+
+    .topics-list a {
+      color: var(--secondary-color);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      background: rgba(52, 152, 219, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background var(--transition-speed), color var(--transition-speed);
+    }
+
+    .topics-list a:hover {
+      background: var(--secondary-color);
+      color: white;
+    }
+
+    .buttons-bar {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .buttons-bar a {
+      text-decoration: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--primary-color);
+      color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+    }
+
+    .buttons-bar a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .buttons-bar a:first-child {
+      background: var(--accent-color);
+    }
+
+    .logout-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-color);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 500;
+      margin-top: 2rem;
+      transition: background var(--transition-speed);
+    }
+
+    .logout-link:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      color: #666;
+      border-top: 1px solid #eee;
+      margin-top: 3rem;
+      font-size: 0.9rem;
+    }
+
+    /* אנימציות */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* תוספת אייקונים */
+    .buttons-bar a[href*="new"]::before {
+      content: "\f067";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+    }
+
+    .buttons-bar a[href*="inbox"]::before {
+      content: "\f01c";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+    }
+
+    .buttons-bar a[href*="outbox"]::before {
+      content: "\f14d";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+    }
+
+    .logout-link::before {
+      content: "\f2f5";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+    }
+
+    /* תוספת רספונסיביות */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+
+      .header-bar {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+      }
+
+      .topics-list {
+        grid-template-columns: 1fr;
+      }
+
+      .buttons-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .buttons-bar a {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* סגנון כפתור מחיקת כל הנושאים */
+    .delete-all-button {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+    }
+
+    .delete-all-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1><i class="fas fa-comments"></i> Topics List</h1>
+    <div th:if="${#authorization.expression('isAuthenticated()')}" class="welcome-text">
+      <i class="fas fa-user"></i> Hello, <strong th:text="${#authentication.name}">User</strong>!
+    </div>
+  </div>
+
+  <p>Explore all the topics in our forum, share your thoughts, and connect with others!</p>
+
+  <!-- הצגת נושאים אם קיימים -->
+  <ul class="topics-list" th:if="${topics.size() > 0}">
+    <li th:each="topic : ${topics}">
+      <span><i class="fas fa-bookmark"></i> <span th:text="${topic.name}">Topic Name</span></span>
+      <a th:href="@{/topics/{id}(id=${topic.id})}"><i class="fas fa-arrow-right"></i> View</a>
+    </li>
+  </ul>
+
+  <!-- הודעה אם אין נושאים -->
+  <p th:if="${topics.size() == 0}">No topics available. Be the first to <a th:href="@{/topics/new}">create one!</a></p>
+
+  <!-- כפתורי פעולה -->
+  <div class="buttons-bar">
+    <a th:href="@{/topics/new}">Create New Topic</a>
+    <a th:href="@{/private/inbox}">Inbox</a>
+    <a th:href="@{/private/outbox}">Outbox</a>
+
+    <!-- כפתור לדשבורד למנהל בלבד -->
+    <!-- כפתור למשתמש בעל ROLE_ADMIN -->
+    <a th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}"
+
+       th:href="@{/admin/dashboard}"
+       class="admin-button">
+      <i class="fas fa-cog"></i> Dashboard
+    </a>
+
+  </div>
+
+  <a class="logout-link" th:href="@{/logout}">Logout</a>
+</div>
+
+<footer>
+  <p>&copy; 2024 MyForum. All rights reserved.</p>
+  <p><small>Created with <i class="fas fa-heart" style="color: var(--accent-color)"></i> by asaf aharon </small></p>
+</footer>
+
+</body>
+</html>

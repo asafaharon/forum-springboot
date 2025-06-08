@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Private Outbox</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #f9fafb;
+            --text-color: #2c3e50;
+            --border-radius: 8px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all var(--transition-speed) ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .error-message {
+            color: var(--accent-color);
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .new-message {
+            display: block;
+            text-align: right;
+            margin-bottom: 1rem;
+        }
+
+        .new-message a {
+            background: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            font-weight: bold;
+        }
+
+        .new-message a:hover {
+            background: #2980b9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: var(--primary-color);
+            color: white;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        tr:hover td {
+            background: #f1f1f1;
+        }
+
+        .message-content {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 300px;
+        }
+
+        .actions button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .actions button:hover {
+            background: #c0392b;
+        }
+
+        .navigation {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .navigation a {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin: 0 1rem;
+        }
+
+        .navigation a:hover {
+            color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+
+<h1>Outbox</h1>
+
+<div th:if="${param.error=='limit'}" class="error-message">
+    Cannot send more messages (limit reached).
+</div>
+
+<div class="new-message" th:if="${canSendMore}">
+    <a th:href="@{/private/send}"><i class="fas fa-paper-plane"></i> Compose New Message</a>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>Message</th>
+        <th>SENT TO</th>
+        <th>Date</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="msg : ${outbox}">
+        <td class="message-content">
+                <span th:text="${
+                    #strings.length(msg.content) > 20
+                      ? #strings.substring(msg.content, 0, 20) + '...'
+                      : msg.content
+                }"></span>
+        </td>
+        <td>
+            <span th:text="${msg.receiver.username}"></span>
+        </td>
+        <td>
+            <span th:text="${#temporals.format(msg.createdAt, 'MMM dd, yyyy HH:mm')}"></span>
+        </td>
+        <td class="actions">
+            <form th:action="@{/private/{id}/delete(id=${msg.id})}" method="post" style="display: inline;">
+                <input type="hidden" name="isSender" value="true" />
+                <button type="submit" class="delete-button">Delete</button>
+            </form>
+
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="navigation">
+    <a th:href="@{/private/inbox}"><i class="fas fa-inbox"></i> Go to Inbox</a>
+    <a th:href="@{/topics}"><i class="fas fa-arrow-left"></i> Back to Topics</a>
+</div>
+
+</body>
+</html>

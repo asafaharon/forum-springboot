@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Topic Details</title>
+    <!-- הוספת Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin-top: 40px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .topic-header {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .message-card {
+            border-left: 5px solid #007bff;
+            padding: 10px;
+            background: #f1f1f1;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .message-content {
+            font-size: 1.1em;
+        }
+
+        .message-meta {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .back-btn {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- כותרת הנושא -->
+    <h2 class="topic-header" th:text="${topic.name}">Topic Name</h2>
+    <p class="text-muted" th:text="${topic.description}">Topic description</p>
+
+    <hr>
+
+    <!-- רשימת הודעות ציבוריות -->
+    <h4>Messages:</h4>
+    <div th:if="${messages.isEmpty()}" class="alert alert-info">No messages yet.</div>
+
+    <div th:each="msg : ${messages}" class="message-card">
+        <p class="message-content" th:text="${msg.content}">Message content</p>
+        <p class="message-meta">
+            <strong th:text="${msg.sender.username}">Username</strong> |
+            <span th:text="${#temporals.format(msg.createdAt, 'MMM dd, yyyy HH:mm')}"></span>
+        </p>
+    </div>
+
+    <!-- כפתור חזרה -->
+    <a th:href="@{/topics}" class="btn btn-secondary back-btn">Back to Topics</a>
+</div>
+
+<!-- הוספת Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

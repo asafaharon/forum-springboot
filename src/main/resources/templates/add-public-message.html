@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Public Message</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #f9fafb;
+            --text-color: #2c3e50;
+            --border-radius: 8px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all var(--transition-speed) ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group textarea {
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: var(--border-radius);
+            resize: vertical;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .button-group button, .button-group a {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background var(--transition-speed), color var(--transition-speed);
+        }
+
+        .button-group button {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .button-group button:hover {
+            background: #2980b9;
+        }
+
+        .button-group a {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .button-group a:hover {
+            background: #7f8c8d;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: auto;
+            padding: 1rem 0;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .button-group button, .button-group a {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1><i class="fas fa-paper-plane"></i> Add Public Message</h1>
+    </div>
+
+    <form th:action="@{/public/topic/{topicId}/add(topicId=${topicId})}" method="post">
+        <div class="form-group">
+            <label for="content">Message Content:</label>
+            <textarea id="content" name="content" rows="5" placeholder="Write your message here..." required></textarea>
+        </div>
+
+        <div class="button-group">
+            <button type="submit"><i class="fas fa-paper-plane"></i> Submit</button>
+            <a th:href="@{/topics}" class="back-button"><i class="fas fa-arrow-left"></i> Back to Topics</a>
+        </div>
+    </form>
+</div>
+
+<div class="footer">
+    <p>&copy; 2024 MyForum. All rights reserved.</p>
+    <p><small>Created with <i class="fas fa-heart" style="color: var(--accent-color)"></i> for our community</small></p>
+</div>
+
+</body>
+</html>

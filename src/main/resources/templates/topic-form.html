@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create New Topic</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f9fafb;
+            color: #2c3e50;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .form-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        .form-container h1 {
+            text-align: center;
+            color: #3498db;
+            margin-bottom: 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .form-group textarea {
+            resize: vertical;
+        }
+        .form-group .error-message {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+        .form-actions {
+            text-align: center;
+        }
+        .form-actions button {
+            padding: 0.8rem 1.5rem;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .form-actions button:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <h1>Create New Topic</h1>
+    <form th:action="@{/topics/new}" method="post" th:object="${topic}">
+        <div class="form-group">
+            <label for="name">Topic Name</label>
+            <input id="name" type="text" th:field="*{name}" placeholder="Enter topic name" required>
+            <div th:if="${#fields.hasErrors('name')}" class="error-message" th:errors="*{name}">Name Error</div>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" th:field="*{description}" rows="4" placeholder="Enter topic description"></textarea>
+            <div th:if="${#fields.hasErrors('description')}" class="error-message" th:errors="*{description}">Description Error</div>
+        </div>
+        <div class="form-actions">
+            <button type="submit">Create Topic</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

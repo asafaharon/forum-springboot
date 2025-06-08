@@ -1,0 +1,77 @@
+package com.example.forum.entities;
+
+import jakarta.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.LocalDateTime;
+
+@XmlRootElement(name = "publicMessage")
+@Entity
+@Table(name = "public_messages")
+public class PublicMessage {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String content;
+    private LocalDateTime createdAt;
+    private boolean deleted;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "topic_id")
+    @XmlTransient // מונע מחזוריות ב-XML
+    @JsonIgnore   // מונע מחזוריות ב-JSON
+    private Topic topic;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
+    private User author;
+
+    public PublicMessage() {}
+
+    // Getters/Setters
+    public Long getId() {
+        return id;
+    }
+
+    @XmlElement
+    public String getContent() {
+        return content;
+    }
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    @XmlElement
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    @XmlElement
+    public boolean isDeleted() {
+        return deleted;
+    }
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Topic getTopic() {
+        return topic;
+    }
+    public void setTopic(Topic topic) {
+        this.topic = topic;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+}

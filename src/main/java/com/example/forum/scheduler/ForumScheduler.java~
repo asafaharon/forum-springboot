@@ -1,0 +1,35 @@
+package com.example.forum.scheduler;
+
+import com.example.forum.entities.PublicMessage;
+import com.example.forum.repositories.PublicMessageRepository;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Component
+public class ForumScheduler {
+
+    private final PublicMessageRepository publicMessageRepository;
+
+    public ForumScheduler(PublicMessageRepository publicMessageRepository) {
+        this.publicMessageRepository = publicMessageRepository;
+    }
+
+    /**
+     * רץ פעם בשבוע (יום ראשון, 03:00)
+     * cron = "0 0 3 ? * SUN"
+     */
+    @Scheduled(cron = "0 0 3 ? * SUN")
+    public void deleteOldPublicMessages() {
+        LocalDateTime cutoff = LocalDateTime.now().minusDays(14);
+        List<PublicMessage> oldMessages = publicMessageRepository.findByCreatedAtBeforeAndDeletedFalse(cutoff);
+        if (!oldMessages.isEmpty()) {
+            for (PublicMessage pm : oldMessages) {
+                pm.setDeleted(true);
+            }
+            publicMessageRepository.saveAll(oldMessages);
+            System.out.println("Scheduler: marked " + oldMessages.size() + " messages as deleted");
+        }
+    }
+}

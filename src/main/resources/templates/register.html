@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+            --background-color: #ecf0f1;
+            --text-color: #34495e;
+            --input-bg: #f8f9fa;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all var(--transition-speed) ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+        }
+
+        .register-container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .heading {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #95a5a6;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+
+        input:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(to right, var(--accent-color), #2980b9);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }עבור להתחבר עם משתמש זמין
+
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(0);
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 1rem;
+            background: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed), background var(--transition-speed);
+        }
+
+        .login-button:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .error-message {
+            background: #fff5f5;
+            color: var(--error-color);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            border-left: 4px solid var(--error-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .optional-badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            background: #f0f0f0;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            color: #666;
+            margin-left: 0.5rem;
+        }
+
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-container">
+    <div class="heading">
+        <h1>Welcome</h1>
+        <p style="color: #666;">Create your account</p>
+    </div>
+
+    <div th:if="${error}" class="error-message">
+        <i class="fas fa-exclamation-circle"></i>
+        <span th:text="${error}"></span>
+    </div>
+
+    <form th:action="@{/register}" method="post" th:object="${user}">
+        <div class="form-group">
+            <label>Username</label>
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" th:field="*{username}" placeholder="Enter your username" required/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Email <span class="optional-badge">optional</span></label>
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="text" th:field="*{email}" placeholder="Enter your email"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" th:field="*{password}" placeholder="Choose a password" required/>
+            </div>
+        </div>
+
+        <button type="submit">
+            Create Account <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
+        </button>
+
+        <!-- כפתור למעבר לדף ההתחברות -->
+        <a th:href="@{/login}" class="login-button">
+            <i class="fas fa-sign-in-alt"></i> go to login with availble user
+        </a>
+    </form>
+</div>
+
+</body>
+</html>

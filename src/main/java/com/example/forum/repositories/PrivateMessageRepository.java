@@ -1,0 +1,16 @@
+package com.example.forum.repositories;
+
+import com.example.forum.entities.PrivateMessage;
+import com.example.forum.entities.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+
+public interface PrivateMessageRepository extends JpaRepository<PrivateMessage, Long> {
+    List<PrivateMessage> findByReceiverAndDeletedByReceiverFalseOrderByCreatedAtDesc(User receiver);
+    List<PrivateMessage> findBySenderAndDeletedBySenderFalseOrderByCreatedAtDesc(User sender);
+    Long countBySenderAndDeletedBySenderFalse(User sender);
+
+    // מתודות למחיקת הודעות לפי משתמש
+    void deleteByReceiver(User receiver);
+    void deleteBySender(User sender);
+}

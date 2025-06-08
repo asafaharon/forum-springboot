@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Private Message</title>
+    <style>
+        /* עיצוב כללי */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* עיצוב הקופסה של הטופס */
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* כותרת */
+        h1 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* תוויות */
+        label {
+            display: block;
+            font-weight: bold;
+            text-align: left;
+            margin: 10px 0 5px;
+            color: #555;
+        }
+
+        /* קלטים ושדות טקסט */
+        select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s ease;
+        }
+
+        select:focus, textarea:focus {
+            border-color: #74ebd5;
+            box-shadow: 0 0 5px rgba(116, 235, 213, 0.5);
+        }
+
+        /* כפתור שליחה */
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #008080;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s ease;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background: #006666;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Send a Private Message</h1>
+
+    <form th:action="@{/private/send}" method="post">
+        <label for="receiverId">Choose a user:</label>
+        <select name="receiverId" id="receiverId">
+            <option value="" disabled selected>-- Select User --</option>
+            <option th:each="u : ${allUsers}" th:value="${u.id}" th:text="${u.username}"></option>
+        </select>
+
+        <label for="content">Message Content:</label>
+        <textarea name="content" id="content" rows="5"></textarea>
+
+        <button type="submit">Send Message</button>
+    </form>
+</div>
+
+</body>
+</html>

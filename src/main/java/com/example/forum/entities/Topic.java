@@ -1,0 +1,78 @@
+package com.example.forum.entities;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import java.util.List;
+
+@XmlRootElement(name = "topic")
+@Entity
+@Table(name = "topics")
+public class Topic {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String editor;
+
+    @NotBlank(message = "Topic name is required")
+    private String name;
+
+    @NotBlank(message = "Topic description is required")
+    @Size(max = 500, message = "Description should not exceed 500 characters")
+    private String description;
+
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
+    @XmlTransient // מונע את המחזוריות בעת יצירת XML
+    private List<PublicMessage> publicMessages;
+
+    public Topic() {}
+
+    public Topic(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    // Getters/Setters
+    @XmlElement
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @XmlElement
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @XmlElement
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<PublicMessage> getPublicMessages() {
+        return publicMessages;
+    }
+    public void setPublicMessages(List<PublicMessage> publicMessages) {
+        this.publicMessages = publicMessages;
+    }
+
+    public String getEditor() {
+        return editor;
+    }
+    public void setEditor(String editor) {
+        this.editor = editor;
+    }
+}

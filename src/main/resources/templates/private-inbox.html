@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Private Inbox</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ef 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 600;
+        }
+
+        .messages-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 30px;
+        }
+
+        .messages-table th {
+            background: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            text-align: left;
+            padding: 16px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .messages-table td {
+            padding: 16px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+        }
+
+        .messages-table tr:hover {
+            background: #f8fafc;
+            transition: background-color 0.3s ease;
+        }
+
+        .sender-name {
+            font-weight: 500;
+            color: #2563eb;
+        }
+
+        .message-snippet {
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .date-column {
+            white-space: nowrap;
+            color: #64748b;
+        }
+
+        .delete-button {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-button:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .navigation {
+            margin-top: 30px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: #3498db;
+            text-decoration: none;
+            padding: 8px 0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #3498db;
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        .nav-link:hover {
+            color: #2980b9;
+        }
+
+        .empty-inbox {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .messages-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Private Inbox</h1>
+
+    <table class="messages-table">
+        <thead>
+        <tr>
+            <th>From</th>
+            <th>Message</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(inbox)}" class="empty-inbox">
+            <td colspan="4">No messages in your inbox</td>
+        </tr>
+        <tr th:each="msg : ${inbox}">
+            <td class="sender-name" th:text="${msg.sender.username}"></td>
+            <td class="message-snippet" th:text="${
+                        #strings.length(msg.content) >= 20
+                            ? #strings.substring(msg.content,0,20) + '...'
+                            : msg.content
+                    }"></td>
+            <td class="date-column" th:text="${#temporals.format(msg.createdAt, 'MMM dd, yyyy HH:mm')}"></td>
+            <td>
+                <form th:action="@{/private/{id}/delete(id=${msg.id})}" method="post" style="display: inline;">
+                    <input type="hidden" name="isSender" value="false" />
+                    <button type="submit" class="delete-button">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        <a th:href="@{/private/outbox}" class="nav-link">Go to Outbox</a>
+        <a th:href="@{/topics}" class="nav-link">Back to Topics</a>
+    </div>
+</div>
+</body>
+</html>
